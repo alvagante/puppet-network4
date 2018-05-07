@@ -43,7 +43,7 @@
 # On Suse
 # Deploys the file /etc/sysconfig/network/ifroute-$name.
 #
-define network::mroute (
+define network::legacy::mroute (
   $routes,
   $interface           = $name,
   $config_file_notify  = 'class_default',
@@ -63,15 +63,15 @@ define network::mroute (
 
   $real_route_up_template = $route_up_template ? {
     undef   => $::osfamily ? {
-      'RedHat' => 'network/mroute-RedHat.erb',
-      'Debian' => 'network/mroute_up-Debian.erb',
-      'SuSE'   => 'network/mroute-SuSE.erb',
+      'RedHat' => 'network/legacy/mroute-RedHat.erb',
+      'Debian' => 'network/legacy/mroute_up-Debian.erb',
+      'SuSE'   => 'network/legacy/mroute-SuSE.erb',
     },
     default =>  $route_up_template,
   }
   $real_route_down_template = $route_down_template ? {
     undef   => $::osfamily ? {
-      'Debian' => 'network/mroute_down-Debian.erb',
+      'Debian' => 'network/legacy/mroute_down-Debian.erb',
       default  => undef,
     },
     default =>  $route_down_template,

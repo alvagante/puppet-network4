@@ -102,7 +102,7 @@
 #
 # Copyright (C) 2011 Mike Arnold, unless otherwise noted.
 #
-define network::route (
+define network::legacy::route (
   $ipaddress,
   $netmask,
   $gateway   = undef,
@@ -165,7 +165,7 @@ define network::route (
         owner   => 'root',
         group   => 'root',
         path    => "/etc/sysconfig/network-scripts/route-${name}",
-        content => template('network/route-RedHat.erb'),
+        content => template('network/legacy/route-RedHat.erb'),
         notify  => $network::manage_config_file_notify,
       }
       file { "route6-${name}":
@@ -174,7 +174,7 @@ define network::route (
         owner   => 'root',
         group   => 'root',
         path    => "/etc/sysconfig/network-scripts/route6-${name}",
-        content => template('network/route6-RedHat.erb'),
+        content => template('network/legacy/route6-RedHat.erb'),
         notify  => $network::manage_config_file_notify,
       }
     }
@@ -185,7 +185,7 @@ define network::route (
         owner   => 'root',
         group   => 'root',
         path    => "/etc/sysconfig/network/ifroute-${name}",
-        content => template('network/route-Suse.erb'),
+        content => template('network/legacy/route-Suse.erb'),
         notify  => $network::manage_config_file_notify,
       }
     }
@@ -196,7 +196,7 @@ define network::route (
         owner   => 'root',
         group   => 'root',
         path    => "/etc/network/if-up.d/z90-route-${name}",
-        content => template('network/route_up-Debian.erb'),
+        content => template('network/legacy/route_up-Debian.erb'),
         notify  => $network::manage_config_file_notify,
       }
       file { "routedown-${name}":
@@ -205,7 +205,7 @@ define network::route (
         owner   => 'root',
         group   => 'root',
         path    => "/etc/network/if-down.d/z90-route-${name}",
-        content => template('network/route_down-Debian.erb'),
+        content => template('network/legacy/route_down-Debian.erb'),
         notify  => $network::manage_config_file_notify,
       }
     }

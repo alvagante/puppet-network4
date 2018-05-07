@@ -25,7 +25,7 @@
 # Marcus Furlong <furlongm@gmail.com>
 #
 
-define network::rule (
+define network::legacy::rule (
   $iprule,
   $interface = $name,
   $family    = undef,
@@ -48,7 +48,7 @@ define network::rule (
         group   => root,
         mode    => '0644',
         path    => "/etc/sysconfig/network-scripts/rule-${interface}",
-        content => template('network/rule-RedHat.erb'),
+        content => template('network/legacy/rule-RedHat.erb'),
         notify  => $network::manage_config_file_notify,
       }
     }
@@ -59,7 +59,7 @@ define network::rule (
         group   => root,
         mode    => '0644',
         path    => "/etc/sysconfig/network/ifrule-${interface}",
-        content => template('network/rule-RedHat.erb'),
+        content => template('network/legacy/rule-RedHat.erb'),
         notify  => $network::manage_config_file_notify,
       }
     }
@@ -70,7 +70,7 @@ define network::rule (
         owner   => 'root',
         group   => 'root',
         path    => "/etc/network/if-up.d/z90-rule-${name}",
-        content => template('network/rule_up-Debian.erb'),
+        content => template('network/legacy/rule_up-Debian.erb'),
         notify  => $network::manage_config_file_notify,
       }
       file { "ruledown-${name}":
@@ -79,7 +79,7 @@ define network::rule (
         owner   => 'root',
         group   => 'root',
         path    => "/etc/network/if-down.d/z90-rule-${name}",
-        content => template('network/rule_down-Debian.erb'),
+        content => template('network/legacy/rule_down-Debian.erb'),
         notify  => $network::manage_config_file_notify,
       }
     }

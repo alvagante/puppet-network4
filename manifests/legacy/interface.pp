@@ -1,6 +1,7 @@
 #
 # = Define: network::interface
 #
+# 
 # This define manages interfaces.
 # Currently only Debian and RedHat families supported.
 # Some parameters are supported only for specific families
@@ -230,11 +231,11 @@
 #     parameter.The Red Hat Enterprise Linux (7 )installation program currently
 #     uses this to configure the layer mode (layer2) and the relative port
 #     number (portno) of qeth devices.
-define network::interface (
+define network::legacy::interface (
 
   $enable                = true,
   $ensure                = 'present',
-  $template              = "network/interface/${::osfamily}.erb",
+  $template              = "network/legacy/interface/${::osfamily}.erb",
   $options               = undef,
   $interface             = $name,
   $restart_all_nic       = true,
@@ -608,7 +609,7 @@ define network::interface (
     }
     $network_notify = "Exec[network_restart_${name}]"
   } else {
-    $network_notify = $network::manage_config_file_notify
+    $network_notify = $::network::manage_config_file_notify
   }
 
   case $::osfamily {

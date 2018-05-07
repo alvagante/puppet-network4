@@ -21,7 +21,7 @@
 # Marcus Furlong <furlongm@gmail.com>
 #
 
-define network::routing_table (
+define network::legacy::routing_table (
   $table_id,
   $table = $name
   ) {
@@ -35,7 +35,7 @@ define network::routing_table (
 
     concat::fragment { 'rt_tables-base':
       target => '/etc/iproute2/rt_tables',
-      source => 'puppet:///modules/network/rt_tables',
+      source => 'puppet:///modules/network/legacy/rt_tables',
     }
   }
 
