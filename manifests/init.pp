@@ -42,7 +42,12 @@ class network (
     undef           => undef,
     default         => $config_file_notify,
   }
-
+  exec { $service_restart_exec :
+    command     => $service_restart_exec,
+    alias       => 'network_restart',
+    refreshonly => true,
+    path        => '/bin:/sbin:/usr/bin:/usr/sbin',
+  }  
   if $hostname {
     contain '::network::hostname'
   }

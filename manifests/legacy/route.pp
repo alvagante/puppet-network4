@@ -155,8 +155,6 @@ define network::legacy::route (
     validate_array($family)
   }
 
-  include ::network
-
   case $::osfamily {
     'RedHat': {
       file { "route-${name}":
@@ -166,7 +164,7 @@ define network::legacy::route (
         group   => 'root',
         path    => "/etc/sysconfig/network-scripts/route-${name}",
         content => template('network/legacy/route-RedHat.erb'),
-        notify  => $network::manage_config_file_notify,
+        notify  => $::network::manage_config_file_notify,
       }
       file { "route6-${name}":
         ensure  => $ensure,
@@ -175,7 +173,7 @@ define network::legacy::route (
         group   => 'root',
         path    => "/etc/sysconfig/network-scripts/route6-${name}",
         content => template('network/legacy/route6-RedHat.erb'),
-        notify  => $network::manage_config_file_notify,
+        notify  => $::network::manage_config_file_notify,
       }
     }
     'Suse': {
@@ -186,7 +184,7 @@ define network::legacy::route (
         group   => 'root',
         path    => "/etc/sysconfig/network/ifroute-${name}",
         content => template('network/legacy/route-Suse.erb'),
-        notify  => $network::manage_config_file_notify,
+        notify  => $::network::manage_config_file_notify,
       }
     }
     'Debian': {
@@ -197,7 +195,7 @@ define network::legacy::route (
         group   => 'root',
         path    => "/etc/network/if-up.d/z90-route-${name}",
         content => template('network/legacy/route_up-Debian.erb'),
-        notify  => $network::manage_config_file_notify,
+        notify  => $::network::manage_config_file_notify,
       }
       file { "routedown-${name}":
         ensure  => $ensure,
@@ -206,7 +204,7 @@ define network::legacy::route (
         group   => 'root',
         path    => "/etc/network/if-down.d/z90-route-${name}",
         content => template('network/legacy/route_down-Debian.erb'),
-        notify  => $network::manage_config_file_notify,
+        notify  => $::network::manage_config_file_notify,
       }
     }
     default: { fail('Operating system not supported')  }
