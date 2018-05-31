@@ -33,6 +33,7 @@ class network (
 
   String $service_restart_exec = 'service network restart',
   Variant[Resource,String] $config_file_notify = 'class_default',
+  Boolean $config_file_per_interface           = true,
 ) {
 
   $manage_config_file_notify = $config_file_notify ? {
