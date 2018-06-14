@@ -1,15 +1,7 @@
 
-# network
+# example42 puppet-network module
 
-Welcome to your new module. A short overview of the generated parts can be found in the PDK documentation at https://puppet.com/pdk/latest/pdk_generating_modules.html .
-
-The README template below provides a starting point with details about what information to include in your README.
-
-
-
-
-
-
+Example 42 Puppet module to manage networking on Linux and Solaris.
 
 #### Table of Contents
 
@@ -20,62 +12,89 @@ The README template below provides a starting point with details about what info
     * [Beginning with network](#beginning-with-network)
 3. [Usage - Configuration options and additional functionality](#usage)
 4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Development - Guide for contributing to the module](#development)
+5. [Backwards compatibility](#backwards-compatibility)
+6. [Limitations - OS compatibility, etc.](#limitations)
+7. [Development - Guide for contributing to the module](#development)
 
 ## Description
 
-Start with a one- or two-sentence summary of what the module does and/or what problem it solves. This is your 30-second elevator pitch for your module. Consider including OS/Puppet version it works with.
+This module configures networking on Linux and Solaris.
 
-You can give more descriptive information in a second paragraph. This paragraph should answer the questions: "What does this module *do*?" and "Why would I use it?" If your module has a range of functionality (installation, configuration, management, etc.), this is the time to mention it.
+It manages hostname, interfaces, routes, rules and routing tables.
+
+The new version (4) works only on Puppet 4 and later and has several changes in class and defines parameters.
+
+Options to provide [backwards compatibility](#backwards-compatibility) are available in order to use the legacy versions of the module's defines.
+
+## Module Description
+
+Main class is used as entrypoint for general variables and wrapper for Hiera driven management of the provided defines.
+
+Classes:
+
+- network::hostname - Manages hostname
+
+Defines:
+
+- network::interface - Manages network interfaces
+- network::route - Manages network routes
+- network::routing_table - Manages iproute2 routing tables
+- network::rule - Manages network rules
+
+Legacy defines (inherited from version 3 of the module):
+
+- network::legacy::interface - Manages network interfaces
+- network::legacy::route - Manages network routes
+- network::legacy::mroute - Manages network routes in an alternative, easier to handle, way
+- network::legacy::routing_table - Manages iproute2 routing tables
+- network::legacy::rule - Manages network rules
 
 ## Setup
 
-### What network affects **OPTIONAL**
+### What puppet-network affects
 
-If it's obvious what your module touches, you can skip this section. For example, folks can probably figure out that your mysql_instance module affects their MySQL instances.
 
-If there's more that they should know about, though, this is the place to mention:
+### Setup Requirements
 
-* Files, packages, services, or operations that the module will alter, impact, or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
+Puppetlabs-stdlib module is the only prerequisite module.
 
-### Setup Requirements **OPTIONAL**
+Puppet 4 or later is required for this module.
 
-If your module requires anything extra before setting up (pluginsync enabled, another module, etc.), mention it here.
-
-If your most recent release breaks compatibility or requires particular steps for upgrading, you might want to include an additional "Upgrading" section here.
+If you have earlier Puppet versions use code from the 3.x tags.
 
 ### Beginning with network
 
-The very basic steps needed for a user to get the module up and running. This can include setup steps, if necessary, or it can be an example of the most basic use of the module.
+Include the main class to be able to manage via Hiera the network resources handled by the module:
 
+    include network
+    
+This does nothing by default, but allows to configure network resources with Hiera data like:
+
+    network::hostname: server.example.com
+    network::interfaces_hash:
+      eth0:
+        enable_dhcp: true
+      eth1:
+        ipaddress: '10.42.42.50'
+        netmask: '255.255.255.0'
+    network::routes_hash:
+      eth1:
+        routes:
+          99.99.228.0/24: eth0
+          100.100.244.0/22: 174.136.107.1
+          101.99.228.0/24: 'eth0 table 1'
+            
 ## Usage
 
-This section is where you describe how to customize, configure, and do the fancy stuff with your module here. It's especially helpful if you include usage examples and code samples for doing things with your module.
 
 ## Reference
 
-Users need a complete list of your module's classes, types, defined types providers, facts, and functions, along with the parameters for each. You can provide this list either via Puppet Strings code comments or as a complete list in the README Reference section.
 
-* If you are using Puppet Strings code comments, this Reference section should include Strings information so that your users know how to access your documentation.
+## Backwards compatibility
 
-* If you are not using Puppet Strings, include a list of all of your classes, defined types, and so on, along with their parameters. Each element in this listing should include:
-
-  * The data type, if applicable.
-  * A description of what the element does.
-  * Valid values, if the data type doesn't make it obvious.
-  * Default value, if any.
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc. If there are Known Issues, you might want to include them under their own heading here.
 
 ## Development
 
-Since your module is awesome, other users will want to play with it. Let them know what the ground rules for contributing are.
-
-## Release Notes/Contributors/Etc. **Optional**
-
-If you aren't using changelog, put your release notes here (though you should consider using changelog). You can also add any additional sections you feel are necessary or important to include here. Please use the `## ` header.
